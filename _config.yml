@@ -1,0 +1,22 @@
+# Hexo Configuration
+title: CloudSheep's Blog
+subtitle: ''
+description: ''
+keywords:
+author: CloudSheep
+language: zh-cn
+timezone: ''
+url: https://cloudetopia.top
+root: /
+permalink: :year/:month/:day/:title/
+source_dir: source
+public_dir: public
+new_post_name: :title.md
+default_layout: post
+highlight:
+  enable: true
+  line_number: true
+deploy:
+  type: git
+  repo: https://github.com/MIutopia/hexo-blog.git
+  branch: master
