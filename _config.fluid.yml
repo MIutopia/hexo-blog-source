@@ -1,0 +1,92 @@
+# Hexo Fluid Theme Config
+# See: https://hexo.fluid-dev.com/docs/
+
+# 导航栏
+navbar:
+  blog_title: CloudSheep
+  menu:
+    - { key: '首页', link: '/', icon: 'iconfont icon-home-fill' }
+    - { key: '归档', link: '/archives/', icon: 'iconfont icon-archive-fill' }
+    - { key: '分类', link: '/categories/', icon: 'iconfont icon-category-fill' }
+    - { key: '标签', link: '/tags/', icon: 'iconfont icon-tags-fill' }
+    - { key: '关于', link: '/about/', icon: 'iconfont icon-user-fill' }
+
+# 首页 Banner
+index:
+  banner_img: /images/hero-bg.jpg
+  banner_img_height: 70
+  slogan:
+    enable: true
+    text: "CloudSheep's Blog — 云原生 & DevOps 技术笔记"
+  auto_excerpt:
+    enable: true
+    length: 150
+
+# 文章页
+post:
+  banner_img: /images/hero-bg.jpg
+  banner_img_height: 60
+  word_count:
+    enable: true
+  reading_time:
+    enable: true
+  meta:
+    author:
+      enable: true
+    date:
+      enable: true
+    wordcount:
+      enable: true
+    readtime:
+      enable: true
+    category:
+      enable: true
+    tags:
+      enable: true
+
+# 归档页
+archive:
+  banner_img: /images/hero-bg.jpg
+  banner_img_height: 60
+
+# 分类页
+category:
+  banner_img: /images/hero-bg.jpg
+  banner_img_height: 60
+
+# 标签页
+tag:
+  banner_img: /images/hero-bg.jpg
+  banner_img_height: 60
+
+# 关于页
+page:
+  about:
+    banner_img: /images/hero-bg.jpg
+    banner_img_height: 60
+
+# 页脚
+footer:
+  content: |
+    <a href="https://github.com/MIutopia" target="_blank" rel="nofollow noopener"><span>CloudSheep's Blog</span></a>
+
+# 评论 (暂不启用)
+comments:
+  enable: false
+
+# 搜索
+search:
+  enable: true
+  placeholder: 搜索
+
+# 代码高亮
+code:
+  highlightjs:
+    enable: true
+    theme: github
+  copy_btn: true
+
+# 文章编辑链接
+post_edit:
+  enable: true
+  url: https://github.com/MIutopia/hexo-blog-source/tree/main/source/_posts/

@@ -1,22 +1,32 @@
 # Hexo Configuration
 title: CloudSheep's Blog
 subtitle: ''
-description: ''
-keywords:
+description: 'DevOps & Cloud Computing'
+keywords: [Docker, Kubernetes, OpenStack, DevOps, Cloud]
 author: CloudSheep
 language: zh-cn
-timezone: ''
-url: https://cloudetopia.top
+timezone: Asia/Shanghai
+
+url: https://www.cloudetopia.top
 root: /
 permalink: :year/:month/:day/:title/
+
 source_dir: source
 public_dir: public
 new_post_name: :title.md
 default_layout: post
+
 highlight:
   enable: true
   line_number: true
+
+theme: fluid
+
+# Feed
+feed:
+  type: atom
+  path: atom.xml
+  limit: 20
+
 deploy:
-  type: git
-  repo: https://github.com/MIutopia/hexo-blog.git
-  branch: master
+  type: ''
