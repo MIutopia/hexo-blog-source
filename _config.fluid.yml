@@ -13,7 +13,7 @@ navbar:
 
 # 首页 Banner
 index:
-  banner_img: /images/hero-bg.jpg
+  banner_img: /images/hero/01.jpg
   banner_img_height: 70
   slogan:
     enable: true
@@ -24,12 +24,8 @@ index:
 
 # 文章页
 post:
-  banner_img: /images/hero-bg.jpg
-  banner_img_height: 60
-  word_count:
-    enable: true
-  reading_time:
-    enable: true
+  banner_img: /images/hero/01.jpg
+  banner_img_height: 50
   meta:
     author:
       enable: true
@@ -46,23 +42,23 @@ post:
 
 # 归档页
 archive:
-  banner_img: /images/hero-bg.jpg
+  banner_img: /images/hero/02.jpg
   banner_img_height: 60
 
 # 分类页
 category:
-  banner_img: /images/hero-bg.jpg
+  banner_img: /images/hero/03.jpg
   banner_img_height: 60
 
 # 标签页
 tag:
-  banner_img: /images/hero-bg.jpg
+  banner_img: /images/hero/04.jpg
   banner_img_height: 60
 
 # 关于页
 page:
   about:
-    banner_img: /images/hero-bg.jpg
+    banner_img: /images/hero/05.jpg
     banner_img_height: 60
 
 # 页脚
