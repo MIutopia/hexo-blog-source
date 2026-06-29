@@ -2,22 +2,35 @@
 title: "KeepAlived 部署实战：构建高可用集群"
 date: 2024-06-18 10:00:00
 categories: ["基础设施"]
-tags: ["KeepAlived", "高可用", "负载均衡", "HA"]
+tags: ["KeepAlived", "高可用", "负载均衡", "VRRP"]
 cover: /images/hero/12.jpg
 summary: "详细讲解 KeepAlived 的部署和配置，实现服务的高可用和故障转移。"
 ---
 
 # KeepAlived 部署实战：构建高可用集群
 
+## 目录
+
+- [引言](#引言)
+- [一、VRRP 原理](#一vrrp-原理)
+- [二、环境准备](#二环境准备)
+- [三、安装 KeepAlived](#三安装-keepalived)
+- [四、配置 KeepAlived](#四配置-keepalived)
+- [五、高级配置](#五高级配置)
+- [六、验证高可用](#六验证高可用)
+- [总结](#总结)
+
 ## 引言
 
-KeepAlived 是一个基于 VRRP（Virtual Router Redundancy Protocol）协议的高可用解决方案，广泛应用于构建高可用集群。本文将详细讲解 KeepAlived 的部署和配置。
+在生产环境中，服务的高可用性直接关系到业务的连续性。KeepAlived 作为基于 VRRP（Virtual Router Redundancy Protocol）协议的高可用解决方案，通过虚拟 IP 实现故障转移，是构建企业级高可用架构的核心组件。
+
+本文将从原理到实践，深入讲解 KeepAlived 的部署和配置，帮助你构建稳定可靠的高可用集群。
 
 ## 一、VRRP 原理
 
-### 1.1 VRRP 协议
+### 1.1 VRRP 协议概述
 
-VRRP（Virtual Router Redundancy Protocol）是一种容错协议，允许多台路由器组成一个虚拟路由器：
+VRRP 是一种容错协议，允许多台路由器组成一个虚拟路由器，共享同一个虚拟 IP（VIP）。当主节点故障时，备用节点会自动接管 VIP，确保服务不中断。
 
 ```
 ┌─────────────────────────────────────────┐
@@ -35,13 +48,15 @@ VRRP（Virtual Router Redundancy Protocol）是一种容错协议，允许多台
   处理请求
 ```
 
-### 1.2 工作机制
+### 1.2 核心工作机制
 
 | 角色 | 说明 |
 |------|------|
-| Master | 主节点，处理所有请求 |
-| Backup | 备用节点，监听 Master 状态 |
-| VIP | 虚拟 IP，对外提供服务 |
+| **Master** | 主节点，负责处理所有请求，定期发送 VRRP 通告 |
+| **Backup** | 备用节点，监听 Master 状态，等待接管 |
+| **VIP** | 虚拟 IP，对外提供服务，可在节点间切换 |
+
+> **关键点**：VRRP 通过优先级（Priority）决定主备关系，优先级越高越优先成为 Master。默认优先级为 100，可通过 `priority` 参数调整。
 
 ## 二、环境准备
 
@@ -75,13 +90,15 @@ echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
 sysctl -p
 ```
 
+> **注意**：生产环境建议配置防火墙规则允许 VRRP 协议（协议号 112），而非完全禁用防火墙。
+
 ## 三、安装 KeepAlived
 
 ```bash
 # 安装依赖
 dnf install -y gcc openssl-devel
 
-# 下载 KeepAlived
+# 下载 KeepAlived（建议使用最新稳定版本）
 wget https://www.keepalived.org/software/keepalived-2.2.8.tar.gz
 tar -xzf keepalived-2.2.8.tar.gz
 cd keepalived-2.2.8
@@ -170,6 +187,11 @@ vrrp_instance VI_1 {
 }
 ```
 
+> **配置要点**：
+> - `virtual_router_id`：同一组节点必须相同（范围 0-255）
+> - `priority`：Master 必须高于 Backup
+> - `advert_int`：通告间隔，单位秒
+
 ### 4.3 启动服务
 
 ```bash
@@ -187,6 +209,8 @@ ip addr show eth0
 ## 五、高级配置
 
 ### 5.1 配置通知脚本
+
+当节点角色变化时，自动执行脚本：
 
 ```conf
 vrrp_instance VI_1 {
@@ -213,12 +237,10 @@ vrrp_instance VI_1 {
 case "$1" in
     master)
         echo "KeepAlived 切换为 MASTER" >> /var/log/keepalived.log
-        # 启动服务
         systemctl start nginx
         ;;
     backup)
         echo "KeepAlived 切换为 BACKUP" >> /var/log/keepalived.log
-        # 停止服务
         systemctl stop nginx
         ;;
     fault)
@@ -230,6 +252,8 @@ chmod +x /etc/keepalived/notify.sh
 ```
 
 ### 5.2 配置健康检查
+
+通过健康检查脚本监控后端服务状态：
 
 ```conf
 vrrp_script chk_http_port {
@@ -268,7 +292,11 @@ fi
 chmod +x /etc/keepalived/check_http.sh
 ```
 
+> **健康检查原理**：当脚本返回非 0 时，节点优先级会减去 `weight` 值（这里是 -20），优先级低于 Backup 时自动切换。
+
 ### 5.3 多实例配置
+
+同一节点运行多个 VRRP 实例：
 
 ```conf
 vrrp_instance VI_1 {
@@ -302,7 +330,7 @@ vrrp_instance VI_2 {
 # 在 Master 节点上停止 KeepAlived
 systemctl stop keepalived
 
-# 在 Backup 节点上检查 VIP
+# 在 Backup 节点上检查 VIP 是否已切换
 ip addr show eth0
 
 # 在 Master 节点上恢复 KeepAlived
@@ -327,7 +355,13 @@ curl http://192.168.1.100
 
 ## 总结
 
-KeepAlived 基于 VRRP 协议实现高可用集群，通过虚拟 IP 实现故障转移。配置健康检查和通知脚本可以实现更完善的高可用方案。
+KeepAlived 基于 VRRP 协议实现高可用集群，核心优势包括：
+
+1. **自动故障转移**：主节点故障时，备用节点自动接管
+2. **配置灵活**：支持通知脚本、健康检查、多实例等高级功能
+3. **性能优异**：纯 C 语言实现，占用资源少
+
+结合 Nginx 等负载均衡器，可以构建企业级高可用架构，保障服务的连续性和可靠性。
 
 ---
 
