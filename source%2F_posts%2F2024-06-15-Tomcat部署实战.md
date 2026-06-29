@@ -2,16 +2,29 @@
 title: "Tomcat 部署实战：从安装到生产环境优化"
 date: 2024-06-15 10:00:00
 categories: ["基础设施"]
-tags: ["Tomcat", "Java", "Web服务器", "部署"]
+tags: ["Tomcat", "Java", "Web服务", "部署"]
 cover: /images/hero/11.jpg
 summary: "详细讲解 Tomcat 的安装和生产环境配置，包括性能优化和安全加固。"
 ---
 
 # Tomcat 部署实战：从安装到生产环境优化
 
+## 目录
+
+- [引言](#引言)
+- [一、安装 Tomcat](#一安装-tomcat)
+- [二、基础配置](#二基础配置)
+- [三、生产环境优化](#三生产环境优化)
+- [四、虚拟主机配置](#四虚拟主机配置)
+- [五、日志管理](#五日志管理)
+- [六、监控和告警](#六监控和告警)
+- [总结](#总结)
+
 ## 引言
 
-Apache Tomcat 是一个流行的 Java Servlet 容器，广泛用于部署 Java Web 应用。本文将详细讲解 Tomcat 的安装和生产环境配置。
+Apache Tomcat 是 Java Web 开发中最流行的 Servlet 容器，广泛用于部署 Java Web 应用。在生产环境中，合理的配置和优化是保证 Tomcat 性能和稳定性的关键。
+
+本文将详细讲解 Tomcat 的安装、配置和优化，帮助你构建高性能的 Java Web 服务。
 
 ## 一、安装 Tomcat
 
@@ -134,8 +147,22 @@ systemctl enable tomcat
 
 ```bash
 # /opt/tomcat/bin/setenv.sh
-export JAVA_OPTS="\n  -Xms2g\n  -Xmx2g\n  -XX:MetaspaceSize=256m\n  -XX:MaxMetaspaceSize=512m\n  -XX:+UseG1GC\n  -XX:MaxGCPauseMillis=200\n  -XX:+HeapDumpOnOutOfMemoryError\n  -XX:HeapDumpPath=/var/log/tomcat/heapdump.hprof\n"
+export JAVA_OPTS="\
+  -Xms2g\
+  -Xmx2g\
+  -XX:MetaspaceSize=256m\
+  -XX:MaxMetaspaceSize=512m\
+  -XX:+UseG1GC\
+  -XX:MaxGCPauseMillis=200\
+  -XX:+HeapDumpOnOutOfMemoryError\
+  -XX:HeapDumpPath=/var/log/tomcat/heapdump.hprof\
+"
 ```
+
+> **JVM 优化要点**：
+> - `-Xms` 和 `-Xmx` 设置为相同值，避免堆内存动态调整
+> - 使用 G1GC 垃圾回收器，适合大内存场景
+> - 配置堆转储，便于分析内存问题
 
 ### 3.2 连接池优化
 
@@ -219,13 +246,28 @@ EOF
 ```bash
 # 启用 JMX
 cat >> /opt/tomcat/bin/setenv.sh << EOF
-export CATALINA_OPTS="\n  -Dcom.sun.management.jmxremote\n  -Dcom.sun.management.jmxremote.port=9090\n  -Dcom.sun.management.jmxremote.rmi.port=9090\n  -Dcom.sun.management.jmxremote.authenticate=false\n  -Dcom.sun.management.jmxremote.ssl=false\n  -Djava.rmi.server.hostname=10.0.0.10\n"
+export CATALINA_OPTS="\
+  -Dcom.sun.management.jmxremote\
+  -Dcom.sun.management.jmxremote.port=9090\
+  -Dcom.sun.management.jmxremote.rmi.port=9090\
+  -Dcom.sun.management.jmxremote.authenticate=false\
+  -Dcom.sun.management.jmxremote.ssl=false\
+  -Djava.rmi.server.hostname=10.0.0.10\
+"
 EOF
 ```
 
 ## 总结
 
-Tomcat 的生产环境配置需要考虑 JVM 优化、连接池配置和安全加固。通过合理的配置，可以构建高性能、高安全的 Java Web 服务。
+Tomcat 的生产环境配置需要综合考虑多个方面：
+
+1. **JVM 优化**：合理配置堆内存和垃圾回收器
+2. **连接池配置**：调整线程池参数适应并发需求
+3. **安全加固**：删除默认应用，限制管理界面访问
+4. **日志管理**：配置日志轮转和定期清理
+5. **监控告警**：启用 JMX 便于监控
+
+通过合理的配置，可以构建高性能、高安全的 Java Web 服务。
 
 ---
 
