@@ -1,4 +1,9 @@
 node_modules/
 .deploy_git/
-db.json
-README.md
+*.log
+.DS_Store
+Thumbs.db
+.cache/
+tmp/
+*.swp
+*.swo
