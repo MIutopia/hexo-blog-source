@@ -6,10 +6,10 @@ navbar:
   blog_title: CloudSheep
   menu:
     - { key: '首页', link: '/', icon: 'iconfont icon-home-fill' }
-    - { key: '归档', link: '/archives/', icon: 'iconfont icon-archive-fill' }
+    - { key: '技术博客', link: '/archives/', icon: 'iconfont icon-archive-fill' }
     - { key: '分类', link: '/categories/', icon: 'iconfont icon-category-fill' }
     - { key: '标签', link: '/tags/', icon: 'iconfont icon-tags-fill' }
-    - { key: '关于', link: '/about/', icon: 'iconfont icon-user-fill' }
+    - { key: '关于我', link: '/about/', icon: 'iconfont icon-user-fill' }
 
 # 首页 Banner
 index:
@@ -39,6 +39,10 @@ post:
       enable: true
     tags:
       enable: true
+  toc:
+    enable: true
+    number: true
+    expand: all
 
 # 归档页
 archive:
@@ -65,24 +69,34 @@ page:
 footer:
   content: |
     <a href="https://github.com/MIutopia" target="_blank" rel="nofollow noopener"><span>CloudSheep's Blog</span></a>
+    <br/>
+    <span>专注于云原生、DevOps、自动化运维技术分享</span>
 
-# 评论 (暂不启用)
-comments:
-  enable: false
+# 评论
+default:
+  comments:
+    enable: false
 
 # 搜索
 search:
   enable: true
-  placeholder: 搜索
+  placeholder: 搜索文章
 
 # 代码高亮
 code:
   highlightjs:
     enable: true
-    theme: github
+    theme: atom-one-dark
   copy_btn: true
 
 # 文章编辑链接
 post_edit:
   enable: true
   url: https://github.com/MIutopia/hexo-blog-source/tree/main/source/_posts/
+
+# 社交链接
+social:
+  enable: true
+  links:
+    - { icon: 'iconfont icon-github', link: 'https://github.com/MIutopia', title: 'GitHub' }
+    - { icon: 'iconfont icon-twitter', link: 'https://twitter.com', title: 'Twitter' }
