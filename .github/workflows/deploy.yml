@@ -23,4 +23,4 @@ jobs:
         run: npx hexo generate
 
       - name: Deploy to Vercel
-        run: npx vercel deploy public/ --prod --token=${{ secrets.VERCEL_TOKEN }} --confirm
+        run: npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --confirm
