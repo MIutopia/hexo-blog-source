@@ -27,6 +27,7 @@ jobs:
         run: npx hexo generate
 
       - name: Deploy to Vercel
+        if: ${{ secrets.VERCEL_TOKEN != '' && secrets.VERCEL_ORG_ID != '' && secrets.VERCEL_PROJECT_ID != '' }}
         uses: vercel/action@v3
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
@@ -34,3 +35,10 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: '--prod'
           working-directory: ./
+
+      - name: Show deployment status
+        if: ${{ secrets.VERCEL_TOKEN == '' || secrets.VERCEL_ORG_ID == '' || secrets.VERCEL_PROJECT_ID == '' }}
+        run: |
+          echo "ERROR: Vercel secrets are not configured!"
+          echo "Please set VERCEL_TOKEN, VERCEL_ORG_ID, and VERCEL_PROJECT_ID in GitHub Secrets"
+          exit 1
