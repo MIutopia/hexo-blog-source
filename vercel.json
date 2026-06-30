@@ -2,6 +2,5 @@
   "buildCommand": "npx hexo generate",
   "outputDirectory": "public",
   "installCommand": "npm install",
-  "framework": null,
-  "nodeVersion": "20.x"
+  "framework": null
 }
