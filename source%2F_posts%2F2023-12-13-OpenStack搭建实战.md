@@ -50,7 +50,7 @@ dnf update -y
 
 ### 1.3 网络规划
 
-```
+```plaintext
 Management Network: 10.0.0.0/24
 Provider Network:   192.168.1.0/24
 Overlay Network:    172.16.0.0/16
