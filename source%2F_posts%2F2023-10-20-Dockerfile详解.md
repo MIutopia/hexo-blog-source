@@ -137,7 +137,7 @@ CMD ["python", "app.py"]
 
 使用 `.dockerignore` 文件排除无关文件：
 
-```
+```dockerignore
 node_modules
 .git
 .DS_Store
