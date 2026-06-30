@@ -1,2 +1,1 @@
-# hexo-blog-source
-Hexo source files for cloudetopia.top
+# CloudSheep's Blog
