@@ -1,1 +1,1 @@
-# CloudSheep's Blog - Powered by Hexo & Vercel
+# CloudSheep's Blog
