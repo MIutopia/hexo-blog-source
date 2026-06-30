@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "./node_modules/.bin/hexo generate",
   "outputDirectory": "public",
   "installCommand": "npm install",
   "framework": null
