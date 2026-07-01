@@ -1,125 +1,96 @@
 ---
 title: Keepalived 部署实战
-date: 2024-06-18 00:00:00
+date: 2024-06-18 10:00:00
 categories:
   - 负载均衡
 tags:
-  - 前端
   - Keepalived
+  - 高可用
 ---
 
-# 安装keepalived所需要的第三方工具
+## 前言
 
-**本次部署专注于构建基于Nginx和Keepalived的高可用集群，已安装的Nginx相关工具将不再重复安装，仅补充构建Keepalived所需的缺失第三方工具**
+Keepalived 是一个用于 Linux 服务器的轻量级高可用解决方案。这篇文章记录了在 CentOS 上从源码编译安装 Keepalived 的完整过程，为后续搭建 Nginx + Keepalived 高可用集群做准备。
 
-1
-2
-# 安装libnl-3开发库
+## 安装依赖
+
+```bash
+# 安装 libnl-3 开发库
 sudo yum install libnl3-devel libnl3-cli-devel
+```
 
-# 下载KeepAlived解压包并解压
+> 注：本次部署专注于构建基于 Nginx 和 Keepalived 的高可用集群，已安装的 Nginx 相关工具将不再重复安装。
 
-**进入官网，根据需求选择所需要的版本进行下载，网址：[Keepalived for Linux](https://keepalived.org/download.html)**
+## 下载并解压 Keepalived
 
-**利用远程终端工具（SecureFX、Xftp等），将下载的解压包上传至服务器的 `/opt/nginx` 目录中**
-
-1
-2
-3
-4
-5
-# 进入/opt/nginx目录中
+```bash
+# 进入目录
 cd /opt/nginx
 
-#将上传至该目录的keepalived-2.3.1.tar.gz解压包进行解压
+# 解压 Keepalived
 tar -xvzf keepalived-2.3.1.tar.gz
+```
 
-# 安装KeepAlived
+> 官网下载地址：[Keepalived for Linux](https://keepalived.org/download.html)
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-# 在nginx目录下创建一个新的keepalived文件夹，用来存放keepalived安装完成后的文件
+## 编译安装
+
+```bash
+# 创建安装目录
 mkdir /opt/nginx/keepalived
 
-# 进入解压后得到的文件夹keepalived-2.3.1
+# 进入源码目录
 cd /opt/nginx/keepalived-2.3.1
 
-# 运行脚本程序进行安装
-./configure/ --prefix=/opt/nginx/keepalived
+# 配置
+./configure --prefix=/opt/nginx/keepalived
 
-# 运行完成后，该文件夹下会多出一个文件--Makefile,可执行以下命令进行编译安装keepalived
-make &amp;&amp; make install
+# 编译安装
+make && make install
+```
 
-# 验证
+## 验证安装
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-# 编译安装完成后如果显示以下内容，则表示安装完成
+编译安装完成后，如果显示以下内容，则表示安装成功：
+
+```
 Use IPVS Framework       : Yes
 IPVS use libnl           : Yes
-IPVS syncd attributes    : No
-IPVS 64 bit stats        : No
-HTTP_GET regex support   : No
-fwmark socket support    : Yes
 Use VRRP Framework       : Yes
 Use VRRP VMAC            : Yes
 Use VRRP authentication  : Yes
 With track_process       : Yes
 With linkbeat            : Yes
-Use NetworkManager       : No
-Use BFD Framework        : No
-SNMP vrrp support        : No
-SNMP checker support     : No
-SNMP RFCv2 support       : No
-SNMP RFCv3 support       : No
-DBUS support             : No
-Use JSON output          : No
-libnl version            : 3
-Use IPv4 devconf         : No
-Use iptables             : No
-Use nftables             : No
-init type                : systemd
-systemd notify           : No
-Strict config checks     : No
-Build documentation      : No
-Default runtime options  : -D
+```
 
-`WARNING`  这是一个警告，可能缺少keepalived所需要的第三方库&#x2F;工具
+> **WARNING**：如果出现警告，可能缺少 Keepalived 所需的第三方库/工具。
 
-                
+## 常见问题
+
+### ❌ 编译报错：缺少依赖
+
+**原因**：缺少 libnl 或 openssl 开发库。
+
+**解决**：
+
+```bash
+yum install -y libnl3-devel openssl-devel
+```
+
+### ❌ 启动失败
+
+**原因**：配置文件错误或权限不足。
+
+**解决**：
+
+```bash
+# 检查配置文件
+cat /opt/nginx/keepalived/etc/keepalived/keepalived.conf
+
+# 使用 root 用户启动
+/opt/nginx/keepalived/sbin/keepalived
+```
+
+---
+
+*以上就是 Keepalived 安装的全部内容。后续文章将介绍如何搭建 Nginx + Keepalived 高可用集群。*
