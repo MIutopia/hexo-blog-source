@@ -1,14 +1,14 @@
 ---
-title: 部署KeepAlived
+title: Keepalived 部署实战
 date: 2024-06-18 00:00:00
 categories:
   - 负载均衡
 tags:
   - 前端
-  - keepalived
+  - Keepalived
 ---
 
-# [](#安装keepalived所需要的第三方工具)安装keepalived所需要的第三方工具
+# 安装keepalived所需要的第三方工具
 
 **本次部署专注于构建基于Nginx和Keepalived的高可用集群，已安装的Nginx相关工具将不再重复安装，仅补充构建Keepalived所需的缺失第三方工具**
 
@@ -17,7 +17,7 @@ tags:
 # 安装libnl-3开发库
 sudo yum install libnl3-devel libnl3-cli-devel
 
-# [](#下载KeepAlived解压包并解压)下载KeepAlived解压包并解压
+# 下载KeepAlived解压包并解压
 
 **进入官网，根据需求选择所需要的版本进行下载，网址：[Keepalived for Linux](https://keepalived.org/download.html)**
 
@@ -34,7 +34,7 @@ cd /opt/nginx
 #将上传至该目录的keepalived-2.3.1.tar.gz解压包进行解压
 tar -xvzf keepalived-2.3.1.tar.gz
 
-# [](#安装KeepAlived)安装KeepAlived
+# 安装KeepAlived
 
 1
 2
@@ -59,7 +59,7 @@ cd /opt/nginx/keepalived-2.3.1
 # 运行完成后，该文件夹下会多出一个文件--Makefile,可执行以下命令进行编译安装keepalived
 make &amp;&amp; make install
 
-# [](#验证)验证
+# 验证
 
 1
 2

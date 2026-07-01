@@ -5,41 +5,41 @@ categories:
   - 负载均衡
 tags:
   - 前端
-  - nginx
-  - keepalived
+  - Nginx
+  - Keepalived
 ---
-# [](#概述)**概述**
+# **概述**
 **前端使用nginx与keepalived构建高可用集群，是一种常见的提升系统稳定性和可靠性的方法。**
-## [](#Nginx)**Nginx**
+## **Nginx**
  **是一款高性能的HTTP和反向代理的服务器主要应用于负载均衡和静态内容服务（前端），同时也提供了IAMP&#x2F;SMTP&#x2F;POP3服务。常用于负载均衡和静态内容服务。**
-## [](#KeepAlived)**KeepAlived**
+## **KeepAlived**
  **用于监听和故障转移的工具，基于VRRP协议（虚拟路由冗余协议）实现，可以监控服务器的状态，并在主服务器故障时自动切换到备份服务器。主要用于提高服务的高可用性**
 keepalivd提供了几种不同的冗余方式
 - 主备模式（master-slave）
 - 负载均衡模式（load balancing）
 - 主备负载均衡模式（master-slave load balancing）
-## [](#双机高可用的方法)**双机高可用的方法**
+## **双机高可用的方法**
 - **KeepAlived+Nginx双机主从模式**
 - **KeepAlived+Nginx双机主主模式**
-# [](#Nginx-1)**Nginx**
-## [](#正向代理)**正向代理**
+# **Nginx**
+## **正向代理**
  **是帮助内网客户端访问外网服务器的代理方式。在这种模式下，客户端无法直接访问目标服务器，但可以通过一个代理服务器进行访问。**
 - **其主要目的是解决访问限制问题，如绕过地区限制或组织内部的访问限制，访问被封锁的资源。**
-## [](#反向代理)**反向代理**
+## **反向代理**
 **是把外网客户端的请求转发给内网服务器的代理方式。在这种模式下，客户端并不知道实际提供服务的服务器地址，只与代理服务器进行交互。**
 - **作用目的：一方面是作为负载均衡器，将客户端请求分发到多个后端服务器；另一方面起到安全防护的作用，过滤恶意请求和响应。**
-## [](#负载均衡)**负载均衡**
+## **负载均衡**
 **负载均衡是将工作负载均匀地分配到多个服务器或网络设备上，以防止任何单一节点过载，从而提高整体系统的可用性和性能。是一种用于在多台服务器之间分配网络流量的技术，旨在优化系统资源利用率、提高服务可用性、增强系统的伸缩性和容错率**
 工作负载的度量标准：CPU使用率、内存使用率、磁盘I&#x2F;O、网络带宽、并发用户数量、请求率、事物处理器等
 **客户端负载均衡：发生在客户端。客户端在发送请求前，根据负载均衡策略（如随机、轮询等）选择一台服务器进行访问，由自己来决定所访问的服务器**
 **服务端负载均衡：发生在服务端。通常通过专门的负载均衡器（如Nginx、HAProxy等）接收客户端的请求，然后根据负载均衡算法（如轮询、加权轮询、最少连接等）将请求分发到后端的多台服务器中的一台进行处理。将服务请求发送给目标网站，由目标网站来决定所访问的服务器（Nginx+KeepAlived）**
 **实现负载均衡的方式：HTTP从定向负载均衡、DNS域名解析负载均衡、反向代理负载均衡、IP负载均衡、数据链路层负载均衡、硬件负载均衡器、软件负载均衡器**
-## [](#Nginx环境搭建)**Nginx环境搭建**
-### [](#安装nginx第三方库)安装nginx第三方库
+## **Nginx环境搭建**
+### 安装nginx第三方库
 **执行以下命令进行安装**
 1
 yum -y install gcc gcc-c++ automake pcre pcre-devel zlib zlib-devel openssl openssl-develyum -y install gcc gcc-c++ automake
-### [](#下载Nginx解压包并解压)下载Nginx解压包并解压
+### 下载Nginx解压包并解压
 - 在官网上直接下载   网址：[http://nginx.org/en/doload.html](http://nginx.org/en/download.html)
 - 在Linux服务器上下载  `wget http://nginx.org/download/nginx-1.26.1.tar.gz`
 1
@@ -61,7 +61,7 @@ cd /opt/nginx
 wget http://nginx.org/download/nginx-1.26.1.tar.gz
 # 解压文件
 tar -xzvf nginx-1.26.1.tar.gz
-### [](#安装Nginx)安装Nginx
+### 安装Nginx
 1
 2
 3
@@ -80,14 +80,14 @@ conf：该目录存放了Nginx的所有配置文件，该文件夹下包含nginx
 html：该目录存放了Nginx服务器在运行过程中调用的一些html文件。
 logs：该目录存放了Nginx服务器的日志。
 sbin：该目录中只包含了一个文件-nginx，它就是Nginx服务器的主程序。
-### [](#修改配置文件)修改配置文件
+### 修改配置文件
 1
 2
 3
 #修改nginx.conf文件中的端口，改为81
 cd /opt/nginx/nginx-1.26.1_install/conf/
 vi nginx.conf
-### [](#启动Nginx服务器)启动Nginx服务器
+### 启动Nginx服务器
 1
 2
 3
@@ -139,14 +139,14 @@ ps -ef|grep nginx
 /opt/nginx/Nginx-1.26.1_install/sbin/nginx -s reopen
 #重新载入配置文件
 /opt/nginx/Nginx-1.26.1_install/sbin/nginx -s reload
-### [](#验证)验证
+### 验证
 1
 2
 3
 #需要关闭Linux服务器的防火墙
 systemctl stop firewall &amp;&amp;systemctl disbale firewalld
 http:192.168.10.100:81
-## [](#虚拟主机)**虚拟主机**
+## **虚拟主机**
 - **一个服务器，多个站点：在nginx的配置中，虚拟主机是一个重要概念，它允许单个nginx服务器为多个域名或IP地址提供服务，而不需要为每个域名或IP地址运行单独的nginx实例**
 - **基于名称的虚拟主机：最常见的虚拟主机是基于服务器名称（通常是域名）的**
 例如，您可能有一个服务器，它同时为 `www.example1.com` 和 `www.example2.com` 提供服务。`nginx` 根据请求中的 `Host` 头字段来确定应该将请求路由到哪个虚拟主机
@@ -155,7 +155,7 @@ http:192.168.10.100:81
 - **配置文件 ：在 nginx 中，虚拟主机的配置通常位于 nginx.conf 文件中的  serve r块内，或者位于包含在其他位置并由 nginx.conf  引入的单独文件中。每个 server 块代表一个虚拟主机，并包含该虚拟主机的所有配置指令**
 - **资源隔离 ：虽然 nginx 在单个进程中处理所有虚拟主机的请求，但每个虚拟主机都拥有其自己的配置和上下文。这意味着一个虚拟主机的错误或配置问题不会影响其他虚拟主机**
 - **扩展性 ：由于 nginx 的模块化设计，您可以为不同的虚拟主机安装和使用不同的模块，从而根据每个站点的需求进行定制和优化**
-### [](#虚拟主机配置)虚拟主机配置
+### 虚拟主机配置
 在配置文件 `/opt/nginx/nginx-1.26.1_install/conf/nginx.conf`中的 `server`项进行配置
 1
 2
@@ -189,7 +189,7 @@ vi /opt/nginx/nginx-1.26.1_install/conf/nginx.conf
             index  index.html;  #当请求路径后面不携带任意文件时，默认访问的文件名（可以只保留一个）
         &#125;
 可以利用本地hosts文件来使用域名访问
-## [](#日志文件)**日志文件**
+## **日志文件**
 存放于nginx的安装目录中
 1
 2
@@ -201,13 +201,13 @@ cd /opt/nginx/nginx-1.26.1_install/logs
 #查看日志文件的内容(最后20条)
 tail -f -n20 access.log、
 每次刷新web网页都会增加一条新的日志记录
-### [](#日志文件切分)日志文件切分
+### 日志文件切分
 **nginx日志文件的切分是一个重要的管理任务，有助于保持日志文件的清晰和可管理性**
 **切分方式**
 - **使用logrotate工具切分：**
 - **自定义nginx配置文件实现文件自切分**
-## [](#Location配置)**Location配置**
-### [](#location语法规则)location语法规则
+## **Location配置**
+### location语法规则
 - **基本语法**
 `location` 块的基本语法结构如下：
 1
@@ -276,7 +276,7 @@ location /api/ &#123;
 `location` 指令后面必须跟一个大括号 `&#123;&#125;`，用于包含 `location` 相关的配置。
 在 `location` 中可以配置一些特殊的变量，如 `$uri` 表示当前请求的 URI，`$args` 表示请求的查询参数等。
 `location` 指令可以与 `proxy_pass`、`fastcgi_pass` 等指令结合使用，将请求转发到其他服务器或处理程序中。
-## [](#反向代理配置)**反向代理配置**
+## **反向代理配置**
 - **配置nginx反向代理可以实现负载均衡、缓存静态内容，提升服务器的性能**
 - **配置反向代理可以隐藏后端服务器、SSL&#x2F;STL终止、控制访问，提升安全性**
 **通过编辑nginx服务器的 `nginx.conf` 文件来实现反向代理的配置**
@@ -323,7 +323,7 @@ server &#123;
 #使用curl命令或者直接在本地服务器上直接访问验证
 curl http://192.168.10.100/tomcat/test.jsp
 如果你的后端服务器支持HTTPS服务，并且你也希望Nginx服务器也能通过HTTPS代理请求，那么你需要配置SSL&#x2F;STL
-## [](#负载均衡配置)负载均衡配置
+## 负载均衡配置
 **nginx服务器配置负载均衡何以实现：提高系统性能、增强系统可用性、实现动态扩展、优化资源利用（提升系统资源利用率）、提高安全性、简化管理（便于管理）**
 **实现nginx服务器的负载均衡配置同样可以利用编辑 `conf` 目录中的 `nginx.conf` 文件实现**
 1
@@ -392,17 +392,17 @@ http &#123;
 加权轮询（Weighted Round Robin）：根据服务器的权重来分发请求，权重越大，接收的请求越多。
 最少连接数（Least Connections）：将请求分配给当前连接数最少的服务器。
 IP 哈希（IP Hash）：根据客户端 IP 的哈希值来分配请求，确保同一个客户端的请求始终被分发到同一台服务器。
-# [](#KeepAlived实现Nginx高可用)KeepAlived实现Nginx高可用
+# KeepAlived实现Nginx高可用
 **这里以nginx+keepalived双机主备模式为例**
 keepalived实现nginx高可用主要是基于VRRP协议（虚拟路由冗余协议）来实现
-## [](#部署KeepAlived)部署KeepAlived
-### [](#安装keepalived所需要的第三方工具)安装keepalived所需要的第三方工具
+## 部署KeepAlived
+### 安装keepalived所需要的第三方工具
 **本次部署专注于构建基于Nginx和Keepalived的高可用集群，已安装的Nginx相关工具将不再重复安装，仅补充构建Keepalived所需的缺失第三方工具**
 1
 2
 # 安装libnl-3开发库
 sudo yum install libnl3-devel libnl3-cli-devel
-### [](#下载KeepAlived解压包并解压)下载KeepAlived解压包并解压
+### 下载KeepAlived解压包并解压
 **进入官网，根据需求选择所需要的版本进行下载，网址：[Keepalived for Linux](https://keepalived.org/download.html)**
 **利用远程终端工具（SecureFX、Xftp等），将下载的解压包上传至服务器的 `/opt/nginx` 目录中**
 1
@@ -414,7 +414,7 @@ sudo yum install libnl3-devel libnl3-cli-devel
 cd /opt/nginx
 #将上传至该目录的keepalived-2.3.1.tar.gz解压包进行解压
 tar -xvzf keepalived-2.3.1.tar.gz
-### [](#安装KeepAlived)安装KeepAlived
+### 安装KeepAlived
 1
 2
 3
@@ -434,7 +434,7 @@ cd /opt/nginx/keepalived-2.3.1
 ./configure/ --prefix=/opt/nginx/keepalived
 # 运行完成后，该文件夹下会多出一个文件--Makefile,可执行以下命令进行编译安装keepalived
 make &amp;&amp; make install
-### [](#验证-1)验证
+### 验证
 1
 2
 3
@@ -494,7 +494,7 @@ Strict config checks     : No
 Build documentation      : No
 Default runtime options  : -D
 `WARNING`  这是一个警告，可能缺少keepalived所需要的第三方库&#x2F;工具
-## [](#编写shell脚本监听nginx是否存活)编写shell脚本监听nginx是否存活
+## 编写shell脚本监听nginx是否存活
 1
 2
 3
@@ -538,7 +538,7 @@ fi
 **赋予 `nginx_check.sh`脚本文件可执行权限**
 1
 chmod +x /opt/nginx/keepalived/nginx_check.sh
-## [](#配置Master节点)配置Master节点
+## 配置Master节点
 **修改master节点的 `keepalived.conf` 文件**
 1
 2
@@ -620,7 +620,7 @@ vrrp_instance PROXY &#123;
                  192.168.10.200   #设置一个虚拟IP进行访问
         &#125;
 配置完成后需要刷新keepalived配置并启动：`/opt/nginx/keepalived/sbin/keepalived -s reload`
-## [](#配置Selave节点)配置Selave节点
+## 配置Selave节点
 **修改slave节点的 `keepalived.conf` 文件**
 1
 2
@@ -703,5 +703,5 @@ vrrp_instance PROXY &#123;
         &#125;
 &#125;
 配置完成后需要刷新keepalived配置并启动：`/opt/nginx/keepalived/sbin/keepalived -s reload`
-# [](#Nginx高可用测试)Nginx高可用测试
+# Nginx高可用测试
 **可将master节点关闭，并在selave节点上利用 `ip addr` 命令进行验证，如果出现了配置文件中所配置的虚拟IP，则表示配置成功**
