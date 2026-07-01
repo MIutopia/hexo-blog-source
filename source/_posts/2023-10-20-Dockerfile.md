@@ -1,350 +1,223 @@
 ---
-title: Dockerfile 详解
-date: 2023-10-20 00:00:00
+title: Dockerfile 详解：从基础到实战
+date: 2023-10-20 10:00:00
 categories:
   - 教程
 tags:
-  - 进阶
   - Docker
+  - DevOps
 ---
-# Dockerfile
-## 什么是dockerfile?dockerfile就是用来构建docker镜像的命令
-**一个完整的docker镜像由以下几步构成：**
-**1.编写一个dockerfile文件**
-**2.使用docker build命令构建成为一个镜像**
-**3.使用docker run命令运行构建好的镜像**
-**4.docker push命令发布镜像 （推荐DockerHub、阿里云镜像仓库）**
-*注：这里参考[官方文档](https://docs.docker.com/engine/reference/builder/)*
-## Dockerfile构建
-**构建dockerfile需要注意以下几点：**
-**1.每个都要保留关键字（指令）且必须是大写字母！！！**
-**2.文件的执行顺序是从上到下的**
-**3.#表示注释（如果vim命令那么在虚拟机上是看不见中文的需要手动安装）**
-**4.每一个指令都会创建并提交一个新的镜像层，并提交！！**
-1
-2
-3
-4
-5
-注：#vim安装命令
-#centos系统
-sudo yum install -y vim*
-#ubatnu系统
-sudo apt install -y vim*
-## Dockerfile的命令
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-FORM              #基础镜像，一切从这里开始
-MAINNTATNER       #镜像构建人（姓名+邮箱）
-RUN               #镜像构建的时候需要运行的命令
-ADD               #步骤：tomcat镜像，这个tomcat压缩包！添加内容
-WORKDIR           #镜像的工作目录
-VOLUME            #挂载的目录
-EXPOSE            #指定暴露的端口号
-CMD               #指定这个容器启动的时候要运行的命令，只有最后一个会生效，可被替代
-ENTRYOINT         #指定这个容器启动时要运行的命令，可以追加命令
-ONBUILD           #当构建一个被继承dockerfile这个时候就会运行ONBUILD的指令。（触发指令）
-COPY              #类似ADD，将我们的文件拷贝到镜像中
-ENV               #构建的时候设置环境变量
-### 实例
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-##创建一个自己的centos镜像##
-#1.编写dockerfile文件
-vi /home/dockerfile/dockerfile.centos  #打开vi编辑器
+
+## 前言
+
+Dockerfile 是用来构建 Docker 镜像的文本文件，包含了一条条指令，告诉 Docker 如何一步步构建镜像。掌握 Dockerfile 是 Docker 进阶的必经之路。
+
+这篇文章从基础概念讲起，通过实例带你理解 Dockerfile 的常用指令和构建流程。
+
+## Dockerfile 构建流程
+
+一个完整的 Docker 镜像由以下几步构成：
+
+1. 编写 Dockerfile 文件
+2. 使用 `docker build` 命令构建镜像
+3. 使用 `docker run` 命令运行镜像
+4. 使用 `docker push` 发布镜像（推荐 DockerHub、阿里云镜像仓库）
+
+> 参考 [Docker 官方文档](https://docs.docker.com/engine/reference/builder/)
+
+## Dockerfile 指令
+
+Dockerfile 中每个指令都会创建一个新的镜像层。
+
+| 指令 | 说明 |
+|------|------|
+| `FROM` | 基础镜像，一切从这里开始 |
+| `MAINTAINER` | 镜像维护者（姓名+邮箱） |
+| `RUN` | 构建镜像时执行的命令 |
+| `ADD` | 添加文件并自动解压压缩包 |
+| `COPY` | 复制文件到镜像中（类似 ADD，但不解压） |
+| `WORKDIR` | 设置工作目录 |
+| `VOLUME` | 挂载目录 |
+| `EXPOSE` | 暴露端口号 |
+| `CMD` | 容器启动时执行的命令（仅最后一个生效，可被替代） |
+| `ENTRYPOINT` | 容器启动时执行的命令（可追加参数） |
+| `ONBUILD` | 当镜像被继承时触发的指令 |
+| `ENV` | 设置环境变量 |
+
+### 注意事项
+
+- 每个指令（关键字）必须**大写**
+- 文件从上到下顺序执行
+- `#` 表示注释
+- 每条指令都会创建并提交一个新的镜像层
+
+## 实战：创建自定义 CentOS 镜像
+
+### 1. 编写 Dockerfile
+
+```dockerfile
+# 创建文件：/home/dockerfile/dockerfile.centos
 FROM centos:7
-MAINTAINER cf&lt;kisssheep1557@163.com&gt;
+MAINTAINER cf<kisssheep1557@163.com>
+
 ENV MYPATH /usr/local/
 WORKDIR $MYPATH
+
 RUN yum -y install vim
-RUN yum -y inatall net-tools
+RUN yum -y install net-tools
+
 EXPOSE 80
+
 CMD echo $MYPATH
-CMD echo &quot;-----end-----&quot;
+CMD echo "-----end-----"
 CMD /bin/bash
-#2.通过编写好的文件构建镜像
-##命令：docker build -f /home/dockerfile/dockerfile文件路径 -t 镜像名：[tag]
+```
+
+### 2. 构建镜像
+
+```bash
+# 命令格式：docker build -f <Dockerfile路径> -t <镜像名>:<tag> .
 docker build -f dockerfile.centos -t mycentos:0.1 .
-Successfully built 285c2064af01
-Successfully tagged mycentos:0.1
-#3.运行测试
-**对比**
-官方给的基础镜像centos:7
-自己创建的镜像mycentos:0.1
-*注：一般官方所给出的基础镜像是没有命令的，我们可以在官方给出的基础镜像的基础之上利用dockerfile来进行创建自己所需要的镜像*
-1
-2
-##查看本地进行的变更历史
-docker history &lt;镜像ID&gt;
-### CMD和ENTRYPOIN的区别
-CMD
-指定这个容器启动的时候要运行的命令，只有最后一个会生效，可以被代替
-ENTRYPOINT
-指定这个容器启动的时候要运行的命令，可以追加命令
-#### 测试CMD
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-#1.编写dockerfile文件
-vi /home/dockerfile/mydockerfile-cmd-test
-cat /home/dockerfile/mydockerfile-cmd-test
+```
+
+### 3. 对比测试
+
+官方基础镜像 `centos:7` 通常没有 vim 等常用命令，而通过 Dockerfile 构建的 `mycentos:0.1` 已经预装了这些工具。
+
+```bash
+# 查看镜像构建历史
+docker history <镜像ID>
+```
+
+## CMD 与 ENTRYPOINT 的区别
+
+这两个指令都用于指定容器启动时执行的命令，但行为不同：
+
+- **CMD**：只有最后一个生效，可以被 `docker run` 的参数替代
+- **ENTRYPOINT**：会追加参数，不会被替代
+
+### 测试 CMD
+
+```dockerfile
 FROM centos:7
-CMD [&quot;ls&quot;,&quot;-a&quot;]
-#2.构建镜像
-docker build -f /home/dockerfile/mydockerfile-cmd-test -t myimage:tag .
-#3.run命令运行，发现我们的“ls -a&quot;命令生效、执行
-1
-2
-3
-4
-5
-#4.追加一个&quot;-l&quot;命令，构成&quot;ls -al&quot;命令，发现报错
-[root@docker ~]# docker run 06f2cc65ea4a -l
-docker: Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: exec: &quot;-l&quot;: executable file not found in $PATH: unknown.
-ERRO[0000] error waiting for container:
-##原因:在CMD命令的情况下，&quot;-l&quot;替换了CMD[&quot;ls&quot;,&quot;a&quot;]命令而不是追加在里面，&quot;-l&quot;不是命令，所以报错！
-#### 测试ENTRYPOINT
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-#1.编写dockerfile文件
-vi /home/dockerfile/mydockerfile-entrypoint-test
-cat /home/dockerfile/mydockerfile-entrypoint-test
-FORM centos:7
-ENTRYPOINT [&quot;ls&quot;,&quot;-a&quot;]
-#2.利用写好的dockerfile文件构建镜像
-docker build -f /home/dockerfile/mydockerfile-cmd-test -t myimages:tag .
-#3.run命令运行构建好的镜像，发现写入的&quot;ls -a&quot;命令生效、执行
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-#4.追加一个&quot;l&quot;命令，构成&quot;ls -al&quot;命令，发现命令生效并且被成功执行
-[root@docker ~]# docker run 5184c7d459a0 -l
-total 12
-drwxr-xr-x.   1 root root     6 Oct  4 08:30 .
-drwxr-xr-x.   1 root root     6 Oct  4 08:30 ..
--rwxr-xr-x.   1 root root     0 Oct  4 08:30 .dockerenv
--rw-r--r--.   1 root root 12114 Nov 13  2020 anaconda-post.log
-lrwxrwxrwx.   1 root root     7 Nov 13  2020 bin -&gt; usr/bin
-drwxr-xr-x.   5 root root   340 Oct  4 08:30 dev
-drwxr-xr-x.   1 root root    66 Oct  4 08:30 etc
-drwxr-xr-x.   2 root root     6 Apr 11  2018 home
-lrwxrwxrwx.   1 root root     7 Nov 13  2020 lib -&gt; usr/lib
-lrwxrwxrwx.   1 root root     9 Nov 13  2020 lib64 -&gt; usr/lib64
-drwxr-xr-x.   2 root root     6 Apr 11  2018 media
-drwxr-xr-x.   2 root root     6 Apr 11  2018 mnt
-drwxr-xr-x.   2 root root     6 Apr 11  2018 opt
-dr-xr-xr-x. 131 root root     0 Oct  4 08:30 proc
-dr-xr-x---.   2 root root   114 Nov 13  2020 root
-drwxr-xr-x.  11 root root   148 Nov 13  2020 run
-lrwxrwxrwx.   1 root root     8 Nov 13  2020 sbin -&gt; usr/sbin
-drwxr-xr-x.   2 root root     6 Apr 11  2018 srv
-dr-xr-xr-x.  13 root root     0 Oct  4 08:13 sys
-drwxrwxrwt.   7 root root   132 Nov 13  2020 tmp
-drwxr-xr-x.  13 root root   155 Nov 13  2020 usr
-drwxr-xr-x.  18 root root   238 Nov 13  2020 var
-##原因：ENTRYPOINT命令的情况下，&quot;-l&quot;追加在ENTRYPOINT [&quot;1s&quot;，&quot;-a&quot;]命令后面，得到&quot;ls -al&quot;的命令，所以命令正常执行！（我们的追加命令，是直接拼接在我们的ENTRYPOINT命令的后面）
-## 实战：制作tomcat镜像
-### 1.准备好centos镜像，tomcat和jdk的压缩包(tomcat和jdk的压缩包安装地址放在下面)
-1
-2
-3
-4
-5
-6
-docker pull centos:7   #下载centos基础镜像
-cd /home/dockerfile  #上传压缩包至该目录
-[root@docker dockerfile]# ls
-apache-tomcat-8.5.93.tar.gz  jdk-8u381-linux-x64.tar.gz
-*注：[tomcat下载地址](https://tomcat.apache.org/download-80.cgi)和 [jdk下载地址](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)*
-### 2.解压，创建dockerfile文件
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-touch readme.txt   #创建readme.txt文件(可以理解为帮助文档)
-vi Dockerfile   #官方命名,build命令会自动查找该路径,不需要-f来确定路径
-##编写dockerfile文件##
+CMD ["ls","-a"]
+```
+
+```bash
+# 构建镜像
+docker build -f mydockerfile-cmd-test -t myimage:tag .
+
+# 运行 - 执行 ls -a
+docker run 06f2cc65ea4a
+
+# 尝试追加 -l 参数 - 报错！
+docker run 06f2cc65ea4a -l
+# 原因：-l 替换了 CMD ["ls","-a"]，而不是追加
+```
+
+### 测试 ENTRYPOINT
+
+```dockerfile
 FROM centos:7
-MAINTAINER yqy&lt;kisssheep1557@163.com&gt; #构建人信息
-#将刚才创建的readme文件复制到该目录下
+ENTRYPOINT ["ls","-a"]
+```
+
+```bash
+# 构建镜像
+docker build -f mydockerfile-entrypoint-test -t myimages:tag .
+
+# 运行 - 执行 ls -a
+docker run 5184c7d459a0
+
+# 追加 -l 参数 - 成功执行 ls -al！
+docker run 5184c7d459a0 -l
+# 原因：-l 被追加到 ENTRYPOINT 后面
+```
+
+## 实战：制作 Tomcat 镜像
+
+### 1. 准备材料
+
+```bash
+# 拉取基础镜像
+docker pull centos:7
+
+# 准备目录
+cd /home/dockerfile
+
+# 下载 Tomcat 和 JDK 压缩包
+# Tomcat: https://tomcat.apache.org/download-80.cgi
+# JDK: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+ls
+# apache-tomcat-8.5.93.tar.gz  jdk-8u381-linux-x64.tar.gz
+```
+
+### 2. 编写 Dockerfile
+
+```dockerfile
+FROM centos:7
+MAINTAINER yqy<kisssheep1557@163.com>
+
+# 复制说明文件
 COPY readme.txt /usr/local/readme.txt
-#ADD会自动解压压缩包
+
+# 添加并解压压缩包
 ADD jdk-8u381-linux-x64.tar.gz /usr/local  
 ADD apache-tomcat-8.5.93.tar.gz /usr/local
-#执行添加命令
+
+# 安装 vim
 RUN yum install -y vim
-#工作目录
+
+# 设置工作目录
 ENV MYPATH /usr/local
 WORKDIR $MYPATH
-#配置tomcat的运行环境
+
+# 配置环境变量
 ENV JAVA_HOME /usr/local/jdk1.8.0_381
 ENV CLASS_PATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
 ENV CATALINA_HOME /usr/local/apache-tomcat-8.5.93
 ENV CATALINA_BASH /usr/local/apache-tomcat-8.5.93
 ENV PATH $PATH:$JAVA_HOME/bin:$CATALINA_HOME/lib:$CATALINA_HOME/bin
-#暴露端口
+
+# 暴露端口
 EXPOSE 8080 
-#启动后监视日志输出
-CMD /usr/local/apache-tomcat-8.5.93/bin/startup.sh &amp;&amp; tail -F /usr/local/apa
-che-tomcat-8.5.93/bin/logs/catalina.out
-### 3.构建镜像，启动，访问测试
-1
-2
-3
-4
-5
-6
-#构建镜像
+
+# 启动 Tomcat 并监控日志
+CMD /usr/local/apache-tomcat-8.5.93/bin/startup.sh && tail -F /usr/local/apache-tomcat-8.5.93/logs/catalina.out
+```
+
+### 3. 构建并运行
+
+```bash
+# 构建镜像
 docker build -t diytomcat .
-#启动镜像
+
+# 运行容器（简单版）
 docker run -d -p 9090:8080 --name diytomcat01 diytomcat:latest
-docker run -d -p 3355:8080 --name yqytomcat -v /home/yqy/build/tomcat/test:/usr/local/apache-tomcat-8.5.93/webapps/test -v /home/yqy/build/tomcat/tomcatlog:/usr/local/apache-tomcat-8.5.93/logs diytomcat   #复杂版
-**访问成功！！！**
-### 4.发布项目
-1
-2
-3
-#在使用run命令打开容器时做了挂载卷，所以直接在本地test文件下编写项目就可以了
-mkdir /home/yqy/build/tomcat/test/WEB-INF
-vi /home/yqy/build/tomcat/test/WEB-INF/web.xml
-1
-2
-3
-4
-5
-6
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;web-app xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot;
-     xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-     xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&quot;
-     version=&quot;2.5&quot;&gt;
-&lt;/web-app&gt;
-1
-vi /home/sywl/build/tomcat/test/index.jsp
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=UTF-8&quot;
- pageEncoding=&quot;UTF-8&quot;%&gt;
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-&lt;meta charset=&quot;utf-8&quot;&gt;
-&lt;title&gt;hello,sywl&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-Hello World!&lt;br/&gt;
-&lt;%
-System.out.println(&quot;----my web test----&quot;);
-%&gt;
-&lt;/body&gt;
-&lt;/html&gt;
+
+# 运行容器（带挂载）
+docker run -d -p 3355:8080 --name yqytomcat \
+  -v /home/yqy/build/tomcat/test:/usr/local/apache-tomcat-8.5.93/webapps/test \
+  -v /home/yqy/build/tomcat/tomcatlog:/usr/local/apache-tomcat-8.5.93/logs \
+  diytomcat
+```
+
+访问 `http://服务器IP:9090` 即可看到 Tomcat 默认页面。
+
+## 常见问题
+
+### ❌ 构建时 yum install 失败
+
+**原因**：CentOS 7 官方源已停止维护。
+
+**解决**：更换为 vault 源或阿里云镜像源。
+
+### ❌ CMD 命令不生效
+
+**原因**：多个 CMD 指令只有最后一个生效。
+
+**解决**：使用 `&&` 连接多个命令，或使用 ENTRYPOINT。
+
+---
+
+*以上就是 Dockerfile 的核心内容和实战示例。掌握这些指令，你就可以构建自己的 Docker 镜像了。*
