@@ -62,6 +62,9 @@ tag:
 # 关于页
 page:
   about:
+    avatar: /images/avatar.jpg
+    name: MIutopia
+    intro: "云原生 & DevOps 技术笔记"
     banner_img: /images/hero/05.jpg
     banner_img_height: 60
 
