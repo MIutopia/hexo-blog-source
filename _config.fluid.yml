@@ -3,7 +3,7 @@
 
 # 导航栏
 navbar:
-  blog_title: CloudSheep
+  blog_title: MIutopia
   menu:
     - { key: '首页', link: '/', icon: 'iconfont icon-home-fill' }
     - { key: '技术博客', link: '/archives/', icon: 'iconfont icon-archive-fill' }
@@ -17,7 +17,7 @@ index:
   banner_img_height: 70
   slogan:
     enable: true
-    text: "CloudSheep's Blog — 云原生 & DevOps 技术笔记"
+    text: "MIutopia's Blog — 云原生 & DevOps 技术笔记"
   auto_excerpt:
     enable: true
     length: 150
@@ -68,7 +68,7 @@ page:
 # 页脚
 footer:
   content: |
-    <a href="https://github.com/MIutopia" target="_blank" rel="nofollow noopener"><span>CloudSheep's Blog</span></a>
+    <a href="https://github.com/MIutopia" target="_blank" rel="nofollow noopener"><span>MIutopia's Blog</span></a>
     <br/>
     <span>专注于云原生、DevOps、自动化运维技术分享</span>
 

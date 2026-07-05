@@ -1,9 +1,9 @@
 # Hexo Configuration
-title: CloudSheep's Blog
+title: MIutopia's Blog
 subtitle: ''
 description: 'DevOps & Cloud Computing'
 keywords: [Docker, Kubernetes, OpenStack, DevOps, Cloud]
-author: CloudSheep
+author: MIutopia
 language: zh-cn
 timezone: Asia/Shanghai
 
