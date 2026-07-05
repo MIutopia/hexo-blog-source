@@ -100,3 +100,7 @@ social:
   links:
     - { icon: 'iconfont icon-github', link: 'https://github.com/MIutopia', title: 'GitHub' }
     - { icon: 'iconfont icon-twitter', link: 'https://twitter.com', title: 'Twitter' }
+
+# Favicon
+favicon: /images/favicon.svg
+apple_touch_icon: /images/favicon.svg
