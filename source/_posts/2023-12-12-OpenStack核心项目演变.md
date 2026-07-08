@@ -1,6 +1,7 @@
 ---
 title: OpenStack 核心项目演变
 date: 2023-12-12 10:00:00
+description: 梳理 OpenStack 各核心项目的演变历程，包括 Nova、Neutron、Cinder 等组件的发展脉络。
 categories:
   - 云计算
 tags:
