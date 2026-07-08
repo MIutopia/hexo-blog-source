@@ -1,6 +1,7 @@
 ---
 title: Dockerfile 详解：从基础到实战
 date: 2023-10-20 10:00:00
+description: Dockerfile 编写指南，从基础指令到多阶段构建，带你掌握镜像构建的核心技能。
 categories:
   - 教程
 tags:
