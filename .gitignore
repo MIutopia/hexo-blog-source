@@ -6,6 +6,8 @@ public/
 Thumbs.db
 .cache/
 tmp/
+db.json
+
 *.swp
 *.swo
 
