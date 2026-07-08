@@ -6,6 +6,7 @@ categories:
   - 教程
 tags:
   - AI Agent
+  - AI Agent
   - Claude Code
   - 自动化
 ---
