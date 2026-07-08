@@ -1,6 +1,7 @@
 ---
 title: Kubernetes 核心概念详解
 date: 2023-12-12 10:00:00
+description: Kubernetes 核心概念详解，从 Pod 到 Service，逐步讲解 K8s 的关键资源对象。
 categories:
   - 云原生
 tags:
