@@ -1,6 +1,7 @@
 ---
 title: Keepalived 部署实战
 date: 2024-06-18 10:00:00
+description: Keepalived 高可用解决方案部署实战，为 Nginx 集群搭建提供基础环境。
 categories:
   - 负载均衡
 tags:
