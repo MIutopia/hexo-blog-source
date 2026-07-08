@@ -1,6 +1,7 @@
 ---
 title: 部署 Nginx + Keepalived 高可用集群
 date: 2024-06-18 10:00:00
+description: 使用 Nginx 与 Keepalived 构建高可用集群，提升系统稳定性和可靠性的完整方案。
 categories:
   - 负载均衡
 tags:
