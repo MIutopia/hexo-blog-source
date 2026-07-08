@@ -30,3 +30,6 @@ feed:
 
 deploy:
   type: ''
+
+sitemap:
+  path: sitemap.xml
