@@ -1,6 +1,7 @@
 ---
 title: Hexo 博客迁移全记录：从 GitHub Pages 到 Vercel
 date: 2026-06-30 10:00:00
+description: Hexo 博客从 GitHub Pages 迁移到 Vercel 的完整记录，含踩坑与解决方案。
 categories:
   - 教程
 tags:
