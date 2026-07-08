@@ -1,6 +1,7 @@
 ---
 title: OpenStack Train 搭建实战（2024版）
 date: 2023-12-13 00:00:00
+description: OpenStack Train 版本双节点搭建实战，基于 CentOS 7 手把手部署私有云环境。
 categories:
   - 云计算
 tags:
