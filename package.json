@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "preinstall": "npm install -g hexo-cli",
-    "build": "hexo generate",
+    "build": "npx hexo generate",
     "deploy": "hexo deploy",
     "server": "hexo server",
     "new": "hexo new"
@@ -21,6 +20,7 @@
     "hexo-generator-archive": "^2.0.0",
     "hexo-generator-category": "^2.0.0",
     "hexo-generator-feed": "^3.0.0",
+    "hexo-generator-sitemap": "^3.0.0",
     "hexo-generator-index": "^3.0.0",
     "hexo-generator-tag": "^2.0.0",
     "hexo-renderer-ejs": "^2.0.0",
