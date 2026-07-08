@@ -1,6 +1,7 @@
 ---
 title: Kubernetes 工作流程图解
 date: 2023-12-12 10:00:00
+description: 以流程图形式展示 Kubernetes 核心工作流程，涵盖 Pod 调度、服务发现与网络通信。
 categories:
   - 云原生
 tags:
