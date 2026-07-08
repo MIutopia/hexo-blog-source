@@ -1,6 +1,7 @@
 ---
 title: 用 Claude Code 实现项目自动化与管理
 date: 2026-07-01 12:00:00
+description: 用 Claude Code 实现项目管理自动化，涵盖批量操作、配置管理、部署检查等场景。
 categories:
   - 教程
 tags:
